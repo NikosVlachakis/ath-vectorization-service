@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  vectorization_service:
+    build: .
+    image: vectorize_json
+    container_name: vectorization_service_container
+    environment:
+      - ID=TestAthSmpcClient
+      - SMPC_URL=http://client1:9000    # We rely on Docker Compose service name 'client1'
+    volumes:
+      - ./output:/app/output
+    ports:
+      - "5001:5001"
+
+  client1:
+    container_name: smpc_client
+    image: gpikra/coordinator:v7.0.7.6
+    entrypoint: python client.py
+    environment:
+      - PLAYER_REPO_2=http://195.251.63.193:7102
+      - PLAYER_REPO_1=http://195.251.63.193:7101
+      - PLAYER_REPO_0=http://195.251.63.193:7100
+      - COORDINATOR_URL=http://195.251.63.193:12314
+      - ID=TestAthSmpcClient
+      - REMOTE_SERVICE_URL=https://agoralabsbe.azurewebsites.net
+      - PORT=9000
+    volumes:
+      - ./dataset/docker:/SCALE-MAMBA/dataset
+    ports:
+      - "9000:9000"

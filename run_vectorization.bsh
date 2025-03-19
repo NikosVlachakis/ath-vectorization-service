@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Stop on first error
+set -e
+
+echo "Building the vectorization_service Docker image..."
+docker-compose build vectorization_service
+
+echo "Running the vectorization_service container..."
+docker-compose run vectorization_service python main.py \
+  --url "https://matrix.srdc.com.tr/dt4h/feast/api/Dataset?url=https://datatools4heart.eu/feature-sets/study1_features_new" \
+  --jobId "123321123" \
+  --clientId "CLIENT_A" \
+  --totalClients 1 \
+  --smpcUrl "http://195.251.63.193:9000" \
+  --orchestratorUrl "http://host.docker.internal:5000"
