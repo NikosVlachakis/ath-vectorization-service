@@ -1,0 +1,442 @@
+[
+    {
+        "featureName": "symptoms_Ankle swelling_display_any",
+        "offset": 0,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Ascites_display_any",
+        "offset": 2,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Breathlessness_display_any",
+        "offset": 4,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Cardiac murmur_display_any",
+        "offset": 6,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Chest pain_display_any",
+        "offset": 8,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Cheyne-stokes respiration_display_any",
+        "offset": 10,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Depression_display_any",
+        "offset": 12,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Dizziness_display_any",
+        "offset": 14,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Elevated jugular venous pressure_display_any",
+        "offset": 16,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Fatigue_display_any",
+        "offset": 18,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Hepatojugular reflux_display_any",
+        "offset": 20,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Hepatomegaly_display_any",
+        "offset": 22,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Intermittent claudication_display_any",
+        "offset": 24,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Irregular pulse_display_any",
+        "offset": 26,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Loss of appetite_display_any",
+        "offset": 28,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Nocturnal cough_display_any",
+        "offset": 30,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Oliguria_display_any",
+        "offset": 32,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Orthopnoea_display_any",
+        "offset": 34,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Palpitations_display_any",
+        "offset": 36,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Paroxysmal nocturnal dyspnea_display_any",
+        "offset": 38,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Peripheral edema_display_any",
+        "offset": 40,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Pleural effusion_display_any",
+        "offset": 42,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Pulmonary crepitations_display_any",
+        "offset": 44,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Reduced exercise tolerance_display_any",
+        "offset": 46,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Syncope_display_any",
+        "offset": 48,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Tachycardia_display_any",
+        "offset": 50,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Tachypnoea_display_any",
+        "offset": 52,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Third heart sound_display_any",
+        "offset": 54,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Weight gain_display_any",
+        "offset": 56,
+        "length": 2
+    },
+    {
+        "featureName": "symptoms_Weight loss_display_any",
+        "offset": 58,
+        "length": 2
+    },
+    {
+        "featureName": "electrocardiographs_ecg_st",
+        "offset": 60,
+        "length": 2
+    },
+    {
+        "featureName": "electrocardiographs_ecg_ischemia_without_st",
+        "offset": 62,
+        "length": 2
+    },
+    {
+        "featureName": "smoking_status_smoker_last",
+        "offset": 64,
+        "length": 2
+    },
+    {
+        "featureName": "smoking_status_formerSmoker_any",
+        "offset": 66,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_ap_any",
+        "offset": 68,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_af_any",
+        "offset": 70,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_cm_any",
+        "offset": 72,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_dysl_any",
+        "offset": 74,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_hf_any",
+        "offset": 76,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_hyp_any",
+        "offset": 78,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_ihd_any",
+        "offset": 80,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_mi_any",
+        "offset": 82,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_pad_any",
+        "offset": 84,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_stroke_any",
+        "offset": 86,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_tia_any",
+        "offset": 88,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_vd_any",
+        "offset": 90,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_revasc_any",
+        "offset": 92,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_devices_any",
+        "offset": 94,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_aidshiv_any",
+        "offset": 96,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_copd_any",
+        "offset": 98,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_diabetes_any",
+        "offset": 100,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_dem_any",
+        "offset": 102,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_dep_any",
+        "offset": 104,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_dia_any",
+        "offset": 106,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_hthyroid_any",
+        "offset": 108,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_ibd_any",
+        "offset": 110,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_ld_any",
+        "offset": 112,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_mc_any",
+        "offset": 114,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_osa_any",
+        "offset": 116,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_rd_any",
+        "offset": 118,
+        "length": 2
+    },
+    {
+        "featureName": "conditions_ckd_chronic_any",
+        "offset": 120,
+        "length": 2
+    },
+    {
+        "featureName": "med_rasi_used_any",
+        "offset": 122,
+        "length": 2
+    },
+    {
+        "featureName": "med_arni_used_any",
+        "offset": 124,
+        "length": 2
+    },
+    {
+        "featureName": "med_acei_used_any",
+        "offset": 126,
+        "length": 2
+    },
+    {
+        "featureName": "med_arb_used_any",
+        "offset": 128,
+        "length": 2
+    },
+    {
+        "featureName": "med_mra_used_any",
+        "offset": 130,
+        "length": 2
+    },
+    {
+        "featureName": "med_diuretics_used_any",
+        "offset": 132,
+        "length": 2
+    },
+    {
+        "featureName": "med_diuretics_loop_used_any",
+        "offset": 134,
+        "length": 2
+    },
+    {
+        "featureName": "med_anti_coag_used_any",
+        "offset": 136,
+        "length": 2
+    },
+    {
+        "featureName": "med_anti_plat_used_any",
+        "offset": 138,
+        "length": 2
+    },
+    {
+        "featureName": "med_thrombolytic_used_any",
+        "offset": 140,
+        "length": 2
+    },
+    {
+        "featureName": "med_bb_used_any",
+        "offset": 142,
+        "length": 2
+    },
+    {
+        "featureName": "med_ccb_used_any",
+        "offset": 144,
+        "length": 2
+    },
+    {
+        "featureName": "med_digitalis_used_any",
+        "offset": 146,
+        "length": 2
+    },
+    {
+        "featureName": "med_antiarrhytmic_used_any",
+        "offset": 148,
+        "length": 2
+    },
+    {
+        "featureName": "med_inotropes_used_any",
+        "offset": 150,
+        "length": 2
+    },
+    {
+        "featureName": "med_vasodil_used_any",
+        "offset": 152,
+        "length": 2
+    },
+    {
+        "featureName": "med_platelet_used_any",
+        "offset": 154,
+        "length": 2
+    },
+    {
+        "featureName": "med_ll_used_any",
+        "offset": 156,
+        "length": 2
+    },
+    {
+        "featureName": "med_ivabradine_used_any",
+        "offset": 158,
+        "length": 2
+    },
+    {
+        "featureName": "med_potassium_binders_used_any",
+        "offset": 160,
+        "length": 2
+    },
+    {
+        "featureName": "med_insulins_used_any",
+        "offset": 162,
+        "length": 2
+    },
+    {
+        "featureName": "med_oral_antidiabetic_used_any",
+        "offset": 164,
+        "length": 2
+    },
+    {
+        "featureName": "med_ari_used_any",
+        "offset": 166,
+        "length": 2
+    },
+    {
+        "featureName": "med_rdoad_used_any",
+        "offset": 168,
+        "length": 2
+    },
+    {
+        "featureName": "med_rdoad_syst_used_any",
+        "offset": 170,
+        "length": 2
+    },
+    {
+        "featureName": "med_cortico_syst_used_any",
+        "offset": 172,
+        "length": 2
+    },
+    {
+        "featureName": "med_antiinfl_used_any",
+        "offset": 174,
+        "length": 2
+    }
+]

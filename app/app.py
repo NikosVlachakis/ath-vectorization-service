@@ -42,6 +42,10 @@ def vectorize_endpoint():
     client_id = os.getenv('ID')  # Get CLIENT_ID from environment variables
     smpc_url = os.getenv('SMPC_URL')  # Get SMPC_URL from environment variables
 
+    client_id = 'ZuellingPharma'
+    smpc_url = 'http://195.251.63.193:9000'
+    smpc_url_2 = os.getenv('SMPC_URL')  # Get SMPC_URL from environment variables
+
     if not url:
         return jsonify({"error": "Missing 'url' in request body"}), 400
 
@@ -76,6 +80,14 @@ def vectorize_endpoint():
 
     # 5) If SMPC + jobId are provided, post first encoder
     if smpc_url and job_id:
+
+        smpc_service = SMPCService(base_url=smpc_url_2)
+
+        first_encoder = encoders_list[0] if encoders_list else {"type": "int", "data": []}
+        success = smpc_service.post_first_encoder(job_id, first_encoder)
+
+
+
         smpc_service = SMPCService(base_url=smpc_url)
 
         first_encoder = encoders_list[0] if encoders_list else {"type": "int", "data": []}

@@ -30,7 +30,7 @@ class OrchestratorNotifier:
             "totalClients": total_clients,
             "schema": schema_list
         }
-        logging.info(f"[OrchestratorNotifier] Notifying orchestrator at: {url}, body={body}")
+        logging.info(f"[OrchestratorNotifier] Notifying orchestrator at: {url}")
 
         try:
             resp = requests.post(url, json=body, timeout=100)
