@@ -6,13 +6,8 @@ services:
     image: vectorize_json
     container_name: vectorization_service_container
     environment:
-<<<<<<< HEAD
-      - ID=gio123
-      - SMPC_URL=http://client1:9001    # We rely on Docker Compose service name 'client1'
-=======
       - ID=ath-test-demo
       - SMPC_URL=http://client1:9000
->>>>>>> b9fc02528fb1f16b0bdf466c8ef905deef196330
     volumes:
       - ./output:/app/output
     ports:
@@ -27,11 +22,7 @@ services:
       - PLAYER_REPO_1=http://195.251.63.193:7101
       - PLAYER_REPO_0=http://195.251.63.193:7100
       - COORDINATOR_URL=http://195.251.63.193:12314
-<<<<<<< HEAD
-      - ID=gio123
-=======
       - ID=ath-test-demo
->>>>>>> b9fc02528fb1f16b0bdf466c8ef905deef196330
       - REMOTE_SERVICE_URL=https://agoralabsbe.azurewebsites.net
       - PORT=9001
     volumes:

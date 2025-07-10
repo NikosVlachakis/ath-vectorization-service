@@ -3,9 +3,6 @@ import logging
 from flask import Flask
 from application.vectorization_bp import vectorization_bp  # import the blueprint
 
-<<<<<<< HEAD
-def create_app():
-=======
 # Local imports
 from encoder import Encoder
 from vectorization_service import VectorizationService
@@ -119,7 +116,6 @@ def vectorize_endpoint():
     }), 200
 
 def main():
->>>>>>> b9fc02528fb1f16b0bdf466c8ef905deef196330
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s [%(name)s] %(message)s"
