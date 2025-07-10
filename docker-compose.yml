@@ -6,8 +6,8 @@ services:
     image: vectorize_json
     container_name: vectorization_service_container
     environment:
-      - ID=TestAthSmpcClient
-      - SMPC_URL=http://client1:9000    # We rely on Docker Compose service name 'client1'
+      - ID=gio123
+      - SMPC_URL=http://client1:9001    # We rely on Docker Compose service name 'client1'
     volumes:
       - ./output:/app/output
     ports:
@@ -22,10 +22,10 @@ services:
       - PLAYER_REPO_1=http://195.251.63.193:7101
       - PLAYER_REPO_0=http://195.251.63.193:7100
       - COORDINATOR_URL=http://195.251.63.193:12314
-      - ID=TestAthSmpcClient
+      - ID=gio123
       - REMOTE_SERVICE_URL=https://agoralabsbe.azurewebsites.net
-      - PORT=9000
+      - PORT=9001
     volumes:
       - ./dataset/docker:/SCALE-MAMBA/dataset
     ports:
-      - "9000:9000"
+      - "9001:9001"

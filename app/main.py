@@ -11,6 +11,7 @@ from encoder import Encoder
 from vectorization_service import VectorizationService
 from services.smpc_service import SMPCService
 from services.orchestrator_notifier import OrchestratorNotifier
+from utils.dataset_fetcher import DatasetFetcher
 
 def main():
     logging.basicConfig(
@@ -20,7 +21,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Vectorize JSON data, update SMPC, and notify orchestrator.")
     parser.add_argument("--url", type=str, required=True,
-                        help="The URL that returns the JSON to be vectorized.")
+                        help="The URL or local file path that contains the JSON to be vectorized.")
     parser.add_argument("--query", type=str, default=None,
                         help="Optional: only vectorize features with this exact name.")
     parser.add_argument("--jobId", type=str, default=None,
@@ -40,13 +41,18 @@ def main():
     if args.query:
         logging.info(f"Only vectorizing features where name == {args.query}")
 
-    # 1) Fetch the dataset with requests
+    # 1) Fetch the dataset using shared utility (supports both URLs and local files)
+    fetcher = DatasetFetcher()
     try:
-        resp = requests.get(args.url, timeout=30)
-        resp.raise_for_status()
-        json_data = resp.json()
+        json_data = fetcher.fetch_dataset(args.url)
+    except FileNotFoundError as e:
+        logging.error(f"[Main] File not found: {e}")
+        return
     except requests.RequestException as e:
         logging.error(f"[Main] Failed to fetch dataset from {args.url} -> {e}")
+        return
+    except Exception as e:
+        logging.error(f"[Main] Error loading dataset from {args.url} -> {e}")
         return
 
     # 2) Vectorize
