@@ -13,6 +13,13 @@ from services.smpc_service import SMPCService
 from services.orchestrator_notifier import OrchestratorNotifier
 from utils.dataset_fetcher import DatasetFetcher
 
+# Import self-contained logging (optional)
+try:
+    from logging_config import get_logger
+    CENTRALIZED_LOGGING = True
+except ImportError:
+    CENTRALIZED_LOGGING = False
+
 vectorization_bp = Blueprint("vectorization_bp", __name__)
 
 @vectorization_bp.route("/vectorize", methods=["POST"])
@@ -55,7 +62,9 @@ def vectorize_endpoint():
     # 2) Fetch dataset (from URL or local file) using shared utility
     fetcher = DatasetFetcher()
     try:
+        logging.info(f"[Vectorize] Starting dataset fetch from: {url}")
         json_data = fetcher.fetch_dataset(url)
+        logging.info(f"[Vectorize] Successfully fetched dataset from: {url}")
     except FileNotFoundError as e:
         logging.error(f"[Vectorize] File not found: {e}")
         return jsonify({"error": f"File not found: {str(e)}"}), 400
@@ -67,9 +76,11 @@ def vectorize_endpoint():
         return jsonify({"error": f"Error loading dataset: {str(e)}"}), 400
 
     # 3) Vectorize
+    logging.info("[Vectorize] Starting dataset vectorization process")
     encoder_obj = Encoder()
     vectorizer = VectorizationService(encoder_obj)
     enhanced_data, encoders_list, schema_list = vectorizer.enhance_dataset(json_data)
+    logging.info("[Vectorize] Dataset vectorization completed successfully")
 
     # 4) Write outputs
     os.makedirs("/app/output", exist_ok=True)

@@ -10,6 +10,7 @@ services:
       - SMPC_URL=http://smpc_client:9001
     volumes:
       - ./output:/app/output
+      - ../logs:/app/logs
     ports:
       - "5001:5001"
     depends_on:
