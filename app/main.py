@@ -32,8 +32,7 @@ def main():
                         help="Number of total clients for orchestrator.")
     parser.add_argument("--smpcUrl", type=str, default="http://195.251.63.193:9000",
                         help="Base URL of SMPC")
-    parser.add_argument("--orchestratorUrl", type=str, default=None,
-                        help="Base URL of the computations orchestrator (e.g. http://localhost:5000)")
+    # orchestratorUrl is now configured via ORCHESTRATOR_URL environment variable
 
     args = parser.parse_args()
 
@@ -87,8 +86,9 @@ def main():
 
         # 5) If SMPC success, notify orchestrator if orchestratorUrl + clientId + totalClients given
         #    also pass schema_list to orchestrator
-        if success and args.orchestratorUrl and args.clientId and args.totalClients is not None:
-            notifier = OrchestratorNotifier(args.orchestratorUrl)
+        orchestrator_url = os.getenv("ORCHESTRATOR_URL")
+        if success and orchestrator_url and args.clientId and args.totalClients is not None:
+            notifier = OrchestratorNotifier(orchestrator_url)
             notified = notifier.notify(args.jobId, args.clientId, args.totalClients, schema_list)
             if notified:
                 logging.info("[Main] Successfully notified computations orchestrator.")

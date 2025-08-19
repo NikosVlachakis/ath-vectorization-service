@@ -36,9 +36,10 @@ def vectorize_endpoint():
     {
       "url": "<dataset_url_or_file_path>",
       "jobId": "<job_id>",
-      "totalClients": 2,
-      "orchestratorUrl": "http://orchestrator:5000"
+      "clientsList": ["client1", "client2"]
     }
+    
+    Note: orchestratorUrl is now configured via ORCHESTRATOR_URL environment variable
     
     The "url" field can be either:
     - A URL (e.g., "http://example.com/dataset.json")
@@ -49,12 +50,13 @@ def vectorize_endpoint():
     # 1) Parse input arguments
     url = data.get("url")
     job_id = data.get("jobId")
-    total_clients = data.get("totalClients")
-    orchestrator_url = data.get("orchestratorUrl")
+    clients_list = data.get("clientsList", [])
+    total_clients = len(clients_list)  # Use length of clientsList
 
     # retrieve environment-based info
     client_id = os.getenv("ID")          # e.g. "TestAthSmpcClient"
     smpc_url  = os.getenv("SMPC_URL")    # e.g. "http://client1:9000"
+    orchestrator_url = os.getenv("ORCHESTRATOR_URL")  # e.g. "http://host.docker.internal:5000"
 
     if not url:
         return jsonify({"error": "Missing 'url' in request body"}), 400
