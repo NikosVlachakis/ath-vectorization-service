@@ -18,9 +18,19 @@ docker-compose up -d
 ### 2. Run Pipeline
 ```bash
 cd trigger-vectorization-pipeline
+
+# Development Mode (default - uses local datasets)
 python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url metadata-test.json \
+  --jobId my_job_001 \
+  --clientsList client1 \
+  --studyId study_12345
+
+# Production Mode (requires PRODUCTION_MODE=true in docker-compose.yml)
+python trigger_vectorization.py \
+  --vectorizationServiceUrl http://localhost:5001 \
+  --studyId study_12345 \
   --jobId my_job_001 \
   --clientsList client1
 ```
@@ -36,6 +46,8 @@ docker logs vectorization_service_container
 
 ## 🌟 Key Features
 
+- ✅ **Feature Extraction Tool Integration**: Production mode API support for external datasets
+- ✅ **Development/Production Modes**: Configurable via `PRODUCTION_MODE` environment variable  
 - ✅ **Multi-Type Data Processing**: Boolean, Numeric, and Categorical features
 - ✅ **Flexible Input**: Local files and URL-based datasets
 - ✅ **Backward Compatible**: 100% compatible with existing systems
@@ -106,7 +118,8 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url my_dataset.json \
   --jobId job_001 \
-  --clientsList client1
+  --clientsList client1 \
+  --studyId study_001
 ```
 
 ### Multi-Client Scenario
@@ -115,7 +128,8 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url client_data.json \
   --jobId shared_job \
-  --clientsList client1 client2 client3
+  --clientsList client1 client2 client3 \
+  --studyId study_shared
 ```
 
 ### URL-based Dataset
@@ -124,8 +138,26 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url https://example.com/dataset.json \
   --jobId job_002 \
-  --clientsList client1
+  --clientsList client1 \
+  --studyId study_url
 ```
+
+## 🔧 Environment Configuration
+
+### Production Mode Settings
+```yaml
+# In docker-compose.yml
+environment:
+  - PRODUCTION_MODE=false  # Set to 'true' to enable Feature Extraction Tool API
+```
+
+**Development Mode (default)**: `PRODUCTION_MODE=false`
+- Uses local datasets (metadata-test.json, URL sources)
+- Requires `--url` parameter
+
+**Production Mode**: `PRODUCTION_MODE=true` 
+- Calls Feature Extraction Tool API with `studyId`
+- `--url` parameter optional (uses API instead)
 
 ## 🔌 API Endpoints
 
@@ -144,13 +176,14 @@ python run_tests.py
 
 ### Test Pipeline
 ```bash
-# Test with new clientsList API
+# Test with new clientsList API and studyId support
 cd ../trigger-vectorization-pipeline
 python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url metadata-test.json \
   --jobId test_job \
-  --clientsList client1
+  --clientsList client1 \
+  --studyId test_study_123
 ```
 
 **Expected Results**: 19/19 tests pass ✅

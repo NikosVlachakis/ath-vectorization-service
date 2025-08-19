@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 
 class DatasetFetcher:
-    """Utility class for fetching datasets from URLs or local files."""
+    """Utility class for fetching datasets from URLs, local files, or Feature Extraction Tool API."""
     
     def __init__(self):
         self.logger = logging.getLogger(__name__)
@@ -78,4 +78,39 @@ class DatasetFetcher:
         
         self.logger.info(f"Reading from resolved path: {file_path}")
         with open(file_path, 'r') as f:
-            return json.load(f) 
+            return json.load(f)
+    
+    def fetch_from_api(self, study_id: str) -> Dict[str, Any]:
+        """
+        Fetch dataset from Feature Extraction Tool API using studyId.
+        
+        Args:
+            study_id: Study identifier for the API call
+            
+        Returns:
+            Dictionary containing the dataset (same format as local/URL datasets)
+            
+        Raises:
+            requests.RequestException: If API call fails
+            Exception: If response format is invalid
+        """
+        # TODO: Replace with actual Feature Extraction Tool API URL
+        api_url = "https://api.feature-extraction-tool.com/dataset"  # Placeholder URL
+        
+        self.logger.info(f"Fetching dataset from Feature Extraction Tool API with studyId: {study_id}")
+        
+        try:
+            response = requests.get(api_url, params={"studyId": study_id}, timeout=30)
+            response.raise_for_status()
+            
+            api_data = response.json()
+            self.logger.info(f"Successfully fetched dataset from API for studyId: {study_id}")
+            
+            return api_data
+            
+        except requests.RequestException as e:
+            self.logger.error(f"API call failed for studyId {study_id}: {e}")
+            raise
+        except Exception as e:
+            self.logger.error(f"Error processing API response for studyId {study_id}: {e}")
+            raise 

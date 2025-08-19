@@ -36,7 +36,8 @@ def vectorize_endpoint():
     {
       "url": "<dataset_url_or_file_path>",
       "jobId": "<job_id>",
-      "clientsList": ["client1", "client2"]
+      "clientsList": ["client1", "client2"],
+      "studyId": "<study_id>" (optional, for production mode Feature Extraction Tool API)
     }
     
     Note: orchestratorUrl is now configured via ORCHESTRATOR_URL environment variable
@@ -51,30 +52,42 @@ def vectorize_endpoint():
     url = data.get("url")
     job_id = data.get("jobId")
     clients_list = data.get("clientsList", [])
+    study_id = data.get("studyId")  # Optional for Feature Extraction Tool API
     total_clients = len(clients_list)  # Use length of clientsList
 
     # retrieve environment-based info
     client_id = os.getenv("ID")          # e.g. "TestAthSmpcClient"
     smpc_url  = os.getenv("SMPC_URL")    # e.g. "http://client1:9000"
     orchestrator_url = os.getenv("ORCHESTRATOR_URL")  # e.g. "http://host.docker.internal:5000"
+    production_mode = os.getenv("PRODUCTION_MODE", "false").lower() == "true"
 
-    if not url:
-        return jsonify({"error": "Missing 'url' in request body"}), 400
-
-    # 2) Fetch dataset (from URL or local file) using shared utility
+    # 2) Conditional dataset fetching based on PRODUCTION_MODE
     fetcher = DatasetFetcher()
     try:
-        logging.info(f"[Vectorize] Starting dataset fetch from: {url}")
-        json_data = fetcher.fetch_dataset(url)
-        logging.info(f"[Vectorize] Successfully fetched dataset from: {url}")
+        if production_mode and study_id:
+            # Production Mode: Call Feature Extraction Tool API with studyId
+            logging.info(f"[Vectorize] Production mode enabled - calling Feature Extraction Tool API with studyId: {study_id}")
+            json_data = fetcher.fetch_from_api(study_id)
+        else:
+            # Development Mode: Use existing dataset fetcher (URL or local file)
+            if not url:
+                return jsonify({"error": "Missing 'url' in request body (required in development mode)"}), 400
+            
+            logging.info(f"[Vectorize] Development mode - fetching dataset from: {url}")
+            if production_mode:
+                logging.warning("[Vectorize] Production mode enabled but no studyId provided - falling back to development mode")
+            
+            json_data = fetcher.fetch_dataset(url)
+            logging.info(f"[Vectorize] Successfully fetched dataset from: {url}")
+            
     except FileNotFoundError as e:
         logging.error(f"[Vectorize] File not found: {e}")
         return jsonify({"error": f"File not found: {str(e)}"}), 400
     except requests.RequestException as e:
-        logging.error(f"[Vectorize] Failed to fetch dataset from {url} -> {e}")
+        logging.error(f"[Vectorize] Failed to fetch dataset: {e}")
         return jsonify({"error": f"Failed to fetch dataset: {str(e)}"}), 400
     except Exception as e:
-        logging.error(f"[Vectorize] Error loading dataset from {url} -> {e}")
+        logging.error(f"[Vectorize] Error loading dataset: {e}")
         return jsonify({"error": f"Error loading dataset: {str(e)}"}), 400
 
     # 3) Vectorize

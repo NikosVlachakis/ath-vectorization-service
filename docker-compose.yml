@@ -9,6 +9,7 @@ services:
       - ID=gio123
       - SMPC_URL=http://smpc_client:9001
       - ORCHESTRATOR_URL=http://host.docker.internal:5000
+      - PRODUCTION_MODE=false  # Set to 'true' to enable Feature Extraction Tool API
     volumes:
       - ./output:/app/output
       - ../logs:/app/logs
