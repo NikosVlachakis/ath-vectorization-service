@@ -22,8 +22,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url metadata-test.json \
   --jobId my_job_001 \
-  --totalClients 1 \
-  --orchestratorUrl http://host.docker.internal:5000
+  --clientsList client1
 ```
 
 ### 3. Verify Results
@@ -79,13 +78,8 @@ docker logs vectorization_service_container
 7. **Aggregate** → Secure multi-party aggregation
 8. **Results** → Final aggregated results
 
-## 📖 Documentation
+## 📖 Architecture Changes
 
-| Document | Description |
-|----------|-------------|
-| **[PIPELINE_DOCUMENTATION.md](PIPELINE_DOCUMENTATION.md)** | 📚 Complete system documentation |
-| **[TESTING_GUIDE.md](TESTING_GUIDE.md)** | 🧪 Comprehensive testing procedures |
-| **[ENHANCED_VECTORIZATION_README.md](ENHANCED_VECTORIZATION_README.md)** | 🔧 Technical implementation details |
 
 ## 🛠️ Prerequisites
 
@@ -96,15 +90,12 @@ docker logs vectorization_service_container
 ## 🚀 Installation
 
 ```bash
-# Clone repository
-git clone <repository-url>
-cd Athina
-
-# Start all services
-./start_services.sh
+# Start vectorization service
+docker-compose up -d
 
 # Verify installation
 docker ps
+# Should show: vectorization_service_container, smpc_client
 ```
 
 ## 💡 Usage Examples
@@ -115,21 +106,16 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url my_dataset.json \
   --jobId job_001 \
-  --totalClients 1 \
-  --orchestratorUrl http://host.docker.internal:5000
+  --clientsList client1
 ```
 
 ### Multi-Client Scenario
 ```bash
-# Client 1
 python trigger_vectorization.py \
-  --url client1_data.json \
-  --jobId shared_job \
-  --totalClients 3 \
   --vectorizationServiceUrl http://localhost:5001 \
-  --orchestratorUrl http://host.docker.internal:5000
-
-# Client 2 & 3 use same jobId with their own data
+  --url client_data.json \
+  --jobId shared_job \
+  --clientsList client1 client2 client3
 ```
 
 ### URL-based Dataset
@@ -138,8 +124,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url https://example.com/dataset.json \
   --jobId job_002 \
-  --totalClients 1 \
-  --orchestratorUrl http://host.docker.internal:5000
+  --clientsList client1
 ```
 
 ## 🔌 API Endpoints
@@ -159,7 +144,13 @@ python run_tests.py
 
 ### Test Pipeline
 ```bash
-# Follow TESTING_GUIDE.md for comprehensive testing
+# Test with new clientsList API
+cd ../trigger-vectorization-pipeline
+python trigger_vectorization.py \
+  --vectorizationServiceUrl http://localhost:5001 \
+  --url metadata-test.json \
+  --jobId test_job \
+  --clientsList client1
 ```
 
 **Expected Results**: 19/19 tests pass ✅
@@ -230,8 +221,8 @@ Response body: {
 
 ## 🎉 Ready to Get Started?
 
-1. **📚 Read the full documentation**: [PIPELINE_DOCUMENTATION.md](PIPELINE_DOCUMENTATION.md)
-2. **🧪 Run comprehensive tests**: [TESTING_GUIDE.md](TESTING_GUIDE.md)
-3. **🔧 Explore technical details**: [ENHANCED_VECTORIZATION_README.md](ENHANCED_VECTORIZATION_README.md)
+1. **🚀 Start the service**: `docker-compose up -d`
+2. **🧪 Run tests**: `python run_tests.py` (19/19 tests)
+3. **📋 Check logs**: `Get-Content ../logs/vectorization-service.log`
 
 **Happy vectorizing with secure multi-party computation!** 🚀 
