@@ -157,6 +157,7 @@ environment:
 
 **Production Mode**: `PRODUCTION_MODE=true` 
 - Calls Feature Extraction Tool API with `studyId`
+- API endpoint: `https://localhost/dt4h/feast/api/Dataset?featureSetId={studyId}`
 - `--url` parameter optional (uses API instead)
 
 ## 🔌 API Endpoints

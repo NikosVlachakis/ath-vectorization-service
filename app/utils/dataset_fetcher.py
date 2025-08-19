@@ -85,7 +85,7 @@ class DatasetFetcher:
         Fetch dataset from Feature Extraction Tool API using studyId.
         
         Args:
-            study_id: Study identifier for the API call
+            study_id: Study identifier for the API call (e.g., "study1-fs")
             
         Returns:
             Dictionary containing the dataset (same format as local/URL datasets)
@@ -94,13 +94,14 @@ class DatasetFetcher:
             requests.RequestException: If API call fails
             Exception: If response format is invalid
         """
-        # TODO: Replace with actual Feature Extraction Tool API URL
-        api_url = "https://api.feature-extraction-tool.com/dataset"  # Placeholder URL
+        # Feature Extraction Tool API endpoint
+        api_url = "https://localhost/dt4h/feast/api/Dataset"
         
         self.logger.info(f"Fetching dataset from Feature Extraction Tool API with studyId: {study_id}")
+        self.logger.info(f"API endpoint: {api_url}?featureSetId={study_id}")
         
         try:
-            response = requests.get(api_url, params={"studyId": study_id}, timeout=30)
+            response = requests.get(api_url, params={"featureSetId": study_id}, timeout=30)
             response.raise_for_status()
             
             api_data = response.json()
