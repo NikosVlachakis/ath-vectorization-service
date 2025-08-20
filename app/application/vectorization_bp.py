@@ -37,7 +37,7 @@ def vectorize_endpoint():
       "url": "<dataset_url_or_file_path>",
       "jobId": "<job_id>",
       "clientsList": ["client1", "client2"],
-      "studyId": "<study_id>" (optional, for production mode Feature Extraction Tool API)
+      "studyId": "<study_id>" (required, used for production mode Feature Extraction Tool API)
     }
     
     Note: orchestratorUrl is now configured via ORCHESTRATOR_URL environment variable
@@ -52,7 +52,7 @@ def vectorize_endpoint():
     url = data.get("url")
     job_id = data.get("jobId")
     clients_list = data.get("clientsList", [])
-    study_id = data.get("studyId")  # Optional for Feature Extraction Tool API
+    study_id = data.get("studyId")  # Required for Feature Extraction Tool API
     total_clients = len(clients_list)  # Use length of clientsList
 
     # retrieve environment-based info
@@ -64,7 +64,7 @@ def vectorize_endpoint():
     # 2) Conditional dataset fetching based on PRODUCTION_MODE
     fetcher = DatasetFetcher()
     try:
-        if production_mode and study_id:
+        if production_mode:
             # Production Mode: Call Feature Extraction Tool API with studyId
             logging.info(f"[Vectorize] Production mode enabled - calling Feature Extraction Tool API with studyId: {study_id}")
             json_data = fetcher.fetch_from_api(study_id)
@@ -73,10 +73,7 @@ def vectorize_endpoint():
             if not url:
                 return jsonify({"error": "Missing 'url' in request body (required in development mode)"}), 400
             
-            logging.info(f"[Vectorize] Development mode - fetching dataset from: {url}")
-            if production_mode:
-                logging.warning("[Vectorize] Production mode enabled but no studyId provided - falling back to development mode")
-            
+            logging.info(f"[Vectorize] Development mode - fetching dataset from: {url} (studyId {study_id} provided but ignored)")
             json_data = fetcher.fetch_dataset(url)
             logging.info(f"[Vectorize] Successfully fetched dataset from: {url}")
             
