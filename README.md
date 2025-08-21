@@ -24,7 +24,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url metadata-test.json \
   --jobId my_job_001 \
-  --clientsList client1 \
+  --clientsList '["client1"]' \
   --studyId study_12345
 
 # Production Mode (requires PRODUCTION_MODE=true in docker-compose.yml)
@@ -32,7 +32,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --studyId study_12345 \
   --jobId my_job_001 \
-  --clientsList client1
+  --clientsList '["client1"]'
 ```
 
 ### 3. Verify Results
@@ -118,7 +118,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url my_dataset.json \
   --jobId job_001 \
-  --clientsList client1 \
+  --clientsList '["client1"]' \
   --studyId study_001
 ```
 
@@ -128,7 +128,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url client_data.json \
   --jobId shared_job \
-  --clientsList client1 client2 client3 \
+  --clientsList '["client1", "client2", "client3"]' \
   --studyId study_shared
 ```
 
@@ -138,7 +138,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url https://example.com/dataset.json \
   --jobId job_002 \
-  --clientsList client1 \
+  --clientsList '["client1"]' \
   --studyId study_url
 ```
 
@@ -183,7 +183,7 @@ python trigger_vectorization.py \
   --vectorizationServiceUrl http://localhost:5001 \
   --url metadata-test.json \
   --jobId test_job \
-  --clientsList client1 \
+  --clientsList '["client1"]' \
   --studyId test_study_123
 ```
 
