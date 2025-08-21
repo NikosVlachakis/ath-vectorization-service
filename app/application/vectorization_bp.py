@@ -12,6 +12,7 @@ from vectorization_service import VectorizationService
 from services.smpc_service import SMPCService
 from services.orchestrator_notifier import OrchestratorNotifier
 from utils.dataset_fetcher import DatasetFetcher
+from services.orchestrator_poller import OrchestratorPoller
 
 # Import self-contained logging (optional)
 try:
@@ -122,6 +123,22 @@ def vectorize_endpoint():
             notified = notifier.notify(job_id, client_id, total_clients, schema_list)
             if notified:
                 logging.info("[Vectorize] Successfully notified computations orchestrator.")
+                
+                # 7) Start polling for results if enabled (distributed architecture)
+                enable_polling = os.getenv("ENABLE_RESULT_POLLING", "false").lower() == "true"
+                if enable_polling:
+                    polling_interval = int(os.getenv("POLLING_INTERVAL", "10"))
+                    polling_timeout = int(os.getenv("POLLING_TIMEOUT", "1200"))
+                    
+                    logging.info(f"[Vectorize] Starting result polling for job {job_id}")
+                    poller = OrchestratorPoller(
+                        orchestrator_url=orchestrator_url,
+                        polling_interval=polling_interval,
+                        polling_timeout=polling_timeout
+                    )
+                    poller.start_polling(job_id)
+                else:
+                    logging.info("[Vectorize] Result polling disabled - using current architecture")
             else:
                 logging.warning("[Vectorize] Failed to notify orchestrator.")
         else:

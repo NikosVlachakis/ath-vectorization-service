@@ -10,9 +10,14 @@ services:
       - SMPC_URL=http://smpc_client:9001
       - ORCHESTRATOR_URL=http://host.docker.internal:5000
       - PRODUCTION_MODE=false  # Set to 'true' to enable Feature Extraction Tool API
+      # Polling Configuration (for distributed architecture)
+      - ENABLE_RESULT_POLLING=true  # Set to 'true' to enable polling for results
+      - POLLING_INTERVAL=2          # Seconds between polls
+      - POLLING_TIMEOUT=1200         # Max polling time in seconds (20 minutes)
     volumes:
       - ./output:/app/output
       - ../logs:/app/logs
+      - ../results:/app/results
     ports:
       - "5001:5001"
     depends_on:
