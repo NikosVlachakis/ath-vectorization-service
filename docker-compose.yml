@@ -15,7 +15,6 @@ services:
       - POLLING_INTERVAL=2          # Seconds between polls
       - POLLING_TIMEOUT=1200         # Max polling time in seconds (20 minutes)
     volumes:
-      - ./output:/app/output
       - ../logs:/app/logs
       - ../results:/app/results
     ports:

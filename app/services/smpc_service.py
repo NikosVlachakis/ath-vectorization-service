@@ -10,7 +10,7 @@ class SMPCService:
 
     def __init__(self, base_url: str):
         """
-        :param base_url: The base URL for SMPC (e.g. "http://195.251.63.193:9000")
+        :param base_url: The base URL for SMPC
         """
         self.base_url = base_url.rstrip("/")
 

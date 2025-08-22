@@ -4,8 +4,7 @@ import logging
 
 class VectorizationService:
     """
-    Enhanced service class that performs vectorization of BOOLEAN, NUMERIC, and CATEGORICAL features
-    while maintaining backward compatibility with existing boolean-only functionality.
+    Class that performs vectorization of BOOLEAN, NUMERIC, and CATEGORICAL features.
     """
 
     def __init__(self, encoder: Encoder):
@@ -16,7 +15,6 @@ class VectorizationService:
         """
         Internal method to convert boolean statistics into a numeric vector:
         [numOfNotNull, numOfTrue].
-        Maintained for backward compatibility.
         """
         num_not_null = statistics.get("numOfNotNull", 0)
         num_true = statistics.get("numOfTrue", 0)
@@ -52,7 +50,6 @@ class VectorizationService:
     def _create_encoder_for_boolean_feature(self, feature: Dict[str, Any]) -> Dict[str, Any]:
         """
         Internal method to generate vectorization/encoder info for a single BOOLEAN feature.
-        Maintained for backward compatibility.
         """
         stats = feature.get("statistics", {})
         vector_data = self._vectorize_boolean_stats(stats)
@@ -189,7 +186,6 @@ class VectorizationService:
     def _process_legacy_format(self, data: Dict[str, Any], query: Optional[str] = None) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
         Process data in legacy format (entries array with featureSet).
-        Maintains backward compatibility.
         
         Args:
             data: The input data dictionary

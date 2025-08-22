@@ -29,9 +29,8 @@ def vectorize_endpoint():
     HTTP endpoint that triggers:
       1) Dataset fetch (from URL or local file)
       2) Vectorization
-      3) Writes results to local outputs
-      4) Posts to SMPC
-      5) Notifies Orchestrator
+      3) Posts to SMPC
+      4) Notifies Orchestrator
 
     Request JSON body example:
     {
@@ -40,29 +39,23 @@ def vectorize_endpoint():
       "clientsList": ["client1", "client2"],
       "studyId": "<study_id>" (required, used for production mode Feature Extraction Tool API)
     }
-    
-    Note: orchestratorUrl is now configured via ORCHESTRATOR_URL environment variable
-    
-    The "url" field can be either:
-    - A URL (e.g., "http://example.com/dataset.json")
-    - A local file path (e.g., "metadata-test.json", "/app/data/dataset.json")
     """
     data = request.json or {}
 
-    # 1) Parse input arguments
+    # Parse input arguments
     url = data.get("url")
     job_id = data.get("jobId")
     clients_list = data.get("clientsList", [])
-    study_id = data.get("studyId")  # Required for Feature Extraction Tool API
-    total_clients = len(clients_list)  # Use length of clientsList
+    study_id = data.get("studyId") 
+    total_clients = len(clients_list)  
 
     # retrieve environment-based info
-    client_id = os.getenv("ID")          # e.g. "TestAthSmpcClient"
-    smpc_url  = os.getenv("SMPC_URL")    # e.g. "http://client1:9000"
-    orchestrator_url = os.getenv("ORCHESTRATOR_URL")  # e.g. "http://host.docker.internal:5000"
+    client_id = os.getenv("ID")        
+    smpc_url  = os.getenv("SMPC_URL")  
+    orchestrator_url = os.getenv("ORCHESTRATOR_URL")
     production_mode = os.getenv("PRODUCTION_MODE", "false").lower() == "true"
 
-    # 2) Conditional dataset fetching based on PRODUCTION_MODE
+    # Conditional dataset fetching based on PRODUCTION_MODE
     fetcher = DatasetFetcher()
     try:
         if production_mode:
@@ -92,36 +85,23 @@ def vectorize_endpoint():
         logging.error(f"[Vectorize] Error loading dataset: {e}")
         return jsonify({"error": f"Error loading dataset: {str(e)}"}), 400
 
-    # 3) Vectorize
+    # Vectorize
     logging.info("[Vectorize] Starting dataset vectorization process")
     encoder_obj = Encoder()
     vectorizer = VectorizationService(encoder_obj)
     enhanced_data, encoders_list, schema_list = vectorizer.enhance_dataset(json_data)
     logging.info("[Vectorize] Dataset vectorization completed successfully")
 
-    # 4) Write outputs
-    os.makedirs("/app/output", exist_ok=True)
-    output_path           = "/app/output/enhanced_dataset.json"
-    encoder_output_path   = "/app/output/encoders_only.json"
-    schema_output_path    = "/app/output/schema.json"
+    # Vectorization complete - no intermediate files saved (production clean)
 
-    with open(output_path, "w") as f:
-        json.dump(enhanced_data, f, indent=4)
-    with open(encoder_output_path, "w") as f:
-        json.dump(encoders_list, f, indent=4)
-    with open(schema_output_path, "w") as f:
-        json.dump(schema_list, f, indent=4)
-
-    logging.info("[Vectorize] Vectorization done; outputs written to /app/output/.")
-
-    # 5) If SMPC + jobId are provided, post first encoder
+    # If SMPC + jobId are provided, post first encoder
     if smpc_url and job_id:
         smpc_service = SMPCService(base_url=smpc_url)
 
         first_encoder = encoders_list[0] if encoders_list else {"type": "int", "data": []}
         success = smpc_service.post_first_encoder(job_id, first_encoder)
 
-        # 6) If SMPC success, notify orchestrator if orchestratorUrl + clientId + totalClients
+        # If SMPC success, notify orchestrator if orchestratorUrl + clientId + totalClients
         if success and orchestrator_url and client_id and total_clients is not None:
             notifier = OrchestratorNotifier(orchestrator_url)
             notified = notifier.notify(job_id, client_id, total_clients, schema_list)
@@ -152,11 +132,7 @@ def vectorize_endpoint():
 
     return jsonify({
         "message": "Vectorization completed.",
-        "outputPaths": {
-            "enhancedData": output_path,
-            "encodersOnly": encoder_output_path,
-            "schema": schema_output_path
-        },
         "encodersCount": len(encoders_list),
-        "schemaCount": len(schema_list)
+        "schemaCount": len(schema_list),
+        "dataProcessedInMemory": True
     }), 200

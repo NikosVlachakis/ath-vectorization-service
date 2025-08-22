@@ -37,11 +37,11 @@ python trigger_vectorization.py \
 
 ### 3. Verify Results
 ```bash
-# Check output files
-docker exec -it vectorization_service_container ls -la /app/output/
-
-# View processing logs
+# View processing logs (data processed in memory, no intermediate files)
 docker logs vectorization_service_container
+
+# Check final results (when aggregation completes)
+ls -la results/
 ```
 
 ## 🌟 Key Features
@@ -208,8 +208,8 @@ docker logs vectorization_service_container
 # Access container
 docker exec -it vectorization_service_container /bin/bash
 
-# Check outputs
-docker exec -it vectorization_service_container ls -la /app/output/
+# Check final aggregated results
+ls -la results/
 ```
 
 ## 📊 Expected Output
@@ -225,10 +225,10 @@ Response body: {
 }
 ```
 
-### Generated Files
-- `enhanced_dataset.json` - Original data with enhancements
-- `encoders_only.json` - Encoded vectors for SMPC
-- `schema.json` - Schema information for decoding
+### Data Processing
+- **In-Memory Processing**: All vectorization happens in memory (no intermediate files)
+- **Direct Communication**: Data sent directly to SMPC and orchestrator via APIs
+- **Final Results**: Only aggregated results saved to `./results/` folder after completion
 
 ## 🌐 Service Ports
 
