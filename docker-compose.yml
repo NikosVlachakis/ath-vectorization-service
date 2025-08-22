@@ -8,8 +8,7 @@ services:
     environment:
       - ID=gio123
       - SMPC_URL=http://smpc_client:9001
-      - ORCHESTRATOR_URL=http://host.docker.internal:5000
-      # - ORCHESTRATOR_URL=http://195.251.63.82:5000
+      - ORCHESTRATOR_URL=http://195.251.63.82:5000
       - PRODUCTION_MODE=false  # Set to 'true' to enable Feature Extraction Tool API
       - ENABLE_RESULT_POLLING=true  # Set to 'true' to enable polling for results
       - POLLING_INTERVAL=5          # Seconds between polls
