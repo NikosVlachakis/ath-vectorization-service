@@ -59,12 +59,26 @@ def main():
     vectorizer = VectorizationService(encoder_obj)
     enhanced_data, encoders_list, schema_list = vectorizer.enhance_dataset(json_data, query=args.query)
 
-    # If smpcUrl and jobId are provided, post first encoder to SMPC
+    # If smpcUrl and jobId are provided, post combined encoder data to SMPC
     if args.smpcUrl and args.jobId:
         smpc_service = SMPCService(base_url=args.smpcUrl)
 
-        first_encoder = encoders_list[0] if encoders_list else {"type": "int", "data": []}
-        success = smpc_service.post_first_encoder(args.jobId, first_encoder)
+        # Combine all encoder data into one array for SMPC
+        combined_data = []
+        for encoder in encoders_list:
+            encoder_data = encoder.get("data", [])
+            combined_data.extend(encoder_data)
+        
+        # Create combined encoder object
+        combined_encoder = {
+            "type": "int",
+            "data": combined_data
+        }
+        
+        logging.info(f"[Main] Sending combined encoder to SMPC: {len(combined_data)} elements")
+        logging.info(f"[Main] Combined data: {combined_data}")
+        
+        success = smpc_service.post_first_encoder(args.jobId, combined_encoder)
 
         # If SMPC success, notify orchestrator if orchestratorUrl + clientId + totalClients given
         #    also pass schema_list to orchestrator

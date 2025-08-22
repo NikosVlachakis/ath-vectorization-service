@@ -94,12 +94,26 @@ def vectorize_endpoint():
 
     # Vectorization complete - no intermediate files saved (production clean)
 
-    # If SMPC + jobId are provided, post first encoder
+    # If SMPC + jobId are provided, post combined encoder data
     if smpc_url and job_id:
         smpc_service = SMPCService(base_url=smpc_url)
 
-        first_encoder = encoders_list[0] if encoders_list else {"type": "int", "data": []}
-        success = smpc_service.post_first_encoder(job_id, first_encoder)
+        # Combine all encoder data into one array for SMPC
+        combined_data = []
+        for encoder in encoders_list:
+            encoder_data = encoder.get("data", [])
+            combined_data.extend(encoder_data)
+        
+        # Create combined encoder object
+        combined_encoder = {
+            "type": "int",
+            "data": combined_data
+        }
+        
+        logging.info(f"[Vectorize] Sending combined encoder to SMPC: {len(combined_data)} elements")
+        logging.info(f"[Vectorize] Combined data: {combined_data}")
+        
+        success = smpc_service.post_first_encoder(job_id, combined_encoder)
 
         # If SMPC success, notify orchestrator if orchestratorUrl + clientId + totalClients
         if success and orchestrator_url and client_id and total_clients is not None:
