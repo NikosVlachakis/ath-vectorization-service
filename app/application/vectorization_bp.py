@@ -66,9 +66,13 @@ def vectorize_endpoint():
     fetcher = DatasetFetcher()
     try:
         if production_mode:
-            # Production Mode: Call Feature Extraction Tool API with studyId
-            logging.info(f"[Vectorize] Production mode enabled - calling Feature Extraction Tool API with studyId: {study_id}")
-            json_data = fetcher.fetch_from_api(study_id)
+            # Production Mode: Call Feature Extraction Tool API with URL as base + studyId as parameter
+            if not url:
+                return jsonify({"error": "Missing 'url' in request body (required as base URL in production mode)"}), 400
+            
+            logging.info(f"[Vectorize] Production mode enabled - calling Feature Extraction Tool API")
+            logging.info(f"[Vectorize] Base URL: {url}, StudyId: {study_id}")
+            json_data = fetcher.fetch_from_api(url, study_id)
         else:
             # Development Mode: Use existing dataset fetcher (URL or local file)
             if not url:

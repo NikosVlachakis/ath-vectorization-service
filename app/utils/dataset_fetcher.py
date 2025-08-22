@@ -80,11 +80,12 @@ class DatasetFetcher:
         with open(file_path, 'r') as f:
             return json.load(f)
     
-    def fetch_from_api(self, study_id: str) -> Dict[str, Any]:
+    def fetch_from_api(self, base_url: str, study_id: str) -> Dict[str, Any]:
         """
-        Fetch dataset from Feature Extraction Tool API using studyId.
+        Fetch dataset from Feature Extraction Tool API using base URL and studyId.
         
         Args:
+            base_url: Base URL for the Feature Extraction Tool API (e.g., "https://api.example.com/api/Dataset")
             study_id: Study identifier for the API call (e.g., "study1-fs")
             
         Returns:
@@ -94,8 +95,8 @@ class DatasetFetcher:
             requests.RequestException: If API call fails
             Exception: If response format is invalid
         """
-        # Feature Extraction Tool API endpoint
-        api_url = "https://localhost/dt4h/feast/api/Dataset"
+        # Use provided base URL (flexible for different environments)
+        api_url = base_url.rstrip('/')
         
         self.logger.info(f"Fetching dataset from Feature Extraction Tool API with studyId: {study_id}")
         self.logger.info(f"API endpoint: {api_url}?featureSetId={study_id}")
