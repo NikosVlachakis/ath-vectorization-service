@@ -37,6 +37,32 @@ This pipeline is used to vectorize the data from the Feature Extraction Tool API
 7. **Aggregate** → Secure multi-party aggregation
 8. **Results** → Final aggregated results after polling the orchestrator
 
+## 🔌 API Endpoint
+
+The vectorization service exposes a REST API endpoint that triggers the complete vectorization pipeline.
+
+### Endpoint
+```
+POST /vectorize
+```
+
+### Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `url` | `string` | ✅ **Yes** | URL or local file path containing JSON data to vectorize |
+| `jobId` | `string` | ✅ **Yes** | Unique job identifier for SMPC and orchestrator tracking |
+| `clientsList` | `array` | ✅ **Yes** | List of client IDs participating in computation (e.g., `["client1", "client2"]`) |
+| `studyId` | `string` | ✅ **Yes** | Study identifier (required for production mode Feature Extraction Tool API) |
+
+### Environment Variables Used
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PRODUCTION_MODE` | `false` | When `true`, uses `url` as base URL for Feature Extraction Tool API |
+| `ID` | - | Client identifier for orchestrator notifications |
+| `SMPC_URL` | http://smpc_client:9001 | Base URL of SMPC service for secure computation |
+| `ORCHESTRATOR_URL` | http://195.251.63.82:5000 | Base URL of computations orchestrator
 
 ## 🛠️ Prerequisites
 
