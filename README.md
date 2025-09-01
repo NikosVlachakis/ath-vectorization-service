@@ -37,13 +37,18 @@ This pipeline is used to vectorize the data from the Feature Extraction Tool API
 7. **Aggregate** → Secure multi-party aggregation
 8. **Results** → Final aggregated results after polling the orchestrator
 
-## 🔌 API Endpoint
+## 🔌 API Endpoints
 
-The vectorization service exposes a REST API endpoint that triggers the complete vectorization pipeline.
+The vectorization service exposes REST API endpoints for pipeline execution and FEM integration.
 
-### Endpoint
+### Primary Endpoint
 ```
 POST /vectorize
+```
+
+### FEM Integration Endpoint
+```
+GET /export-data/<job_id>
 ```
 
 ### Request Parameters
