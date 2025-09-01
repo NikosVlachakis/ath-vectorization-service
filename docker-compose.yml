@@ -11,8 +11,8 @@ services:
       - ORCHESTRATOR_URL=http://195.251.63.82:5000
       - PRODUCTION_MODE=false  # Set to 'true' to enable Feature Extraction Tool API
       - ENABLE_RESULT_POLLING=true  # Set to 'true' to enable polling for results
-      - POLLING_INTERVAL=5          # Seconds between polls
-      - POLLING_TIMEOUT=1200         # Max polling time in seconds (20 minutes)
+      - POLLING_INTERVAL=5          
+      - POLLING_TIMEOUT=1200
     volumes:
       - ../logs:/app/logs
       - ../results:/app/results
