@@ -108,7 +108,28 @@ class DatasetFetcher:
             api_data = response.json()
             self.logger.info(f"Successfully fetched dataset from API for studyId: {study_id}")
             
-            return api_data
+            # Extract only featureStats from the full API response
+            if "featureStats" in api_data:
+                feature_stats = api_data["featureStats"]
+                self.logger.info(f"Extracted featureStats containing {len(feature_stats)} features")
+                
+                # Minimal transformation: just rename featureStats → entries (vectorization service expects "entries")
+                transformed_data = {
+                    "entries": feature_stats
+                }
+                
+                self.logger.info(f"Transformed API data for vectorization processing")
+                return transformed_data
+            else:
+                self.logger.error("API response does not contain 'featureStats' field")
+                raise ValueError("API response missing required 'featureStats' field")
+            
+        except KeyError as e:
+            self.logger.error(f"API response structure error for studyId {study_id}: {e}")
+            raise
+        except ValueError as e:
+            self.logger.error(f"API data format error for studyId {study_id}: {e}")
+            raise
             
         except requests.RequestException as e:
             self.logger.error(f"API call failed for studyId {study_id}: {e}")

@@ -8,7 +8,7 @@ This pipeline is used to vectorize the data from the Feature Extraction Tool API
 |------|--------------|---------------|--------|
 | **Boolean** | `numOfNotNull`, `numOfTrue` | `[numOfNotNull, numOfTrue]` | 2 |
 | **Numeric** | `numOfNotNull`, `min`, `max`, `avg`, `q1`, `q2`, `q3` | `[numOfNotNull, min, max, avg, q1, q2, q3]` | 7 |
-| **Categorical** | `numOfNotNull`, `valueSet`, `cardinalityPerItem` | `[numOfNotNull, numUniqueValues, topValueCount]` | 3 |
+| **Categorical** | `numOfNotNull`, `valueSet`, `cardinalityPerItem` | `[numOfNotNull]` | 1 |
 
 ## 🏗️ Architecture
 

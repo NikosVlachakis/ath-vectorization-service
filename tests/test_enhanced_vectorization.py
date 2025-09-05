@@ -148,7 +148,9 @@ class TestEnhancedVectorization(unittest.TestCase):
         self.assertEqual(cat_result, expected)
     
     def test_legacy_format_processing(self):
-        """Test processing of legacy format data (backward compatibility)"""
+        """Legacy format support removed - test disabled"""
+        # Legacy format support removed since only metadata-test.json and SRDC formats are used
+        self.skipTest("Legacy format support removed")
         
         # Create legacy format data
         legacy_data = {

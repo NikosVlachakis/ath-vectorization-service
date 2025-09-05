@@ -87,6 +87,7 @@ def vectorize_endpoint():
             json_data = fetcher.fetch_dataset(url)
             log_info(f"[Vectorize] Successfully fetched dataset from: {url}")
             
+            
     except FileNotFoundError as e:
         log_error(f"[Vectorize] File not found: {e}")
         return jsonify({"error": f"File not found: {str(e)}"}), 400

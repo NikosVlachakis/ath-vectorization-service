@@ -64,17 +64,15 @@ class VectorizationService:
 
     def _detect_data_format(self, data: Dict[str, Any]) -> str:
         """
-        Detect whether the data is in the old format (entries array) or new format (direct statistics).
+        Detect the data format to decide processing strategy.
         
         Args:
             data: The input data dictionary
             
         Returns:
-            'legacy' for old format, 'direct' for new format
+            'direct' for supported format, 'unknown' for unsupported
         """
-        if "entries" in data and isinstance(data["entries"], list):
-            return "legacy"
-        elif "entries" in data and isinstance(data["entries"], dict):
+        if "entries" in data and isinstance(data["entries"], dict):
             return "direct"
         else:
             return "unknown"
@@ -104,8 +102,6 @@ class VectorizationService:
             return "NOMINAL"
         elif "min" in feature_data and "max" in feature_data and "avg" in feature_data:
             return "NUMERIC"
-        elif "numOfNotNull" in feature_data and len(feature_data) == 1:
-            return "DATETIME"  # Only has numOfNotNull, likely datetime
         else:
             return "UNKNOWN"
 
@@ -144,12 +140,6 @@ class VectorizationService:
                 processed_entries[feature_name] = feature_stats
                 continue
             
-            # Skip datetime for now
-            if data_type == "DATETIME":
-                self._logger.info(f"Skipping datetime feature '{feature_name}' (not supported for aggregation)")
-                processed_entries[feature_name] = feature_stats
-                continue
-            
             # Create encoder
             encoder_obj = self._create_encoder_for_feature(feature_name, data_type, feature_stats)
             feature_encoders.append(encoder_obj)
@@ -183,71 +173,6 @@ class VectorizationService:
         
         return enhanced_data, feature_encoders, schema_list
 
-    def _process_legacy_format(self, data: Dict[str, Any], query: Optional[str] = None) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
-        """
-        Process data in legacy format (entries array with featureSet).
-        
-        Args:
-            data: The input data dictionary
-            query: Optional feature name filter
-            
-        Returns:
-            Tuple of (enhanced_data, encoders_list, schema_list)
-        """
-        entries = data.get("entries", [])
-        feature_encoders: List[Dict[str, Any]] = []
-        schema_list: List[Dict[str, Any]] = []
-        current_offset = 0
-
-        for entry in entries:
-            features = entry.get("featureSet", {}).get("features", [])
-            for feature in features:
-                # Apply query filter if provided
-                if query and feature.get("name") != query:
-                    continue
-
-                data_type = feature.get("dataType", "").upper()
-                
-                # Handle boolean features (backward compatibility)
-                if data_type == "BOOLEAN":
-                    encoder_obj = self._create_encoder_for_boolean_feature(feature)
-                    feature_encoders.append(encoder_obj)
-
-                    # Add schema info
-                    schema_list.append({
-                        "featureName": feature.get("name"),
-                        "dataType": data_type,
-                        "offset": current_offset,
-                        "length": 2,
-                        "fields": ["numOfNotNull", "numOfTrue"]
-                    })
-                    current_offset += 2
-                    
-                elif data_type in ["NUMERIC", "NOMINAL", "ORDINAL"]:
-                    # Handle other data types
-                    stats = feature.get("statistics", {})
-                    encoder_obj = self._create_encoder_for_feature(feature.get("name"), data_type, stats)
-                    feature_encoders.append(encoder_obj)
-                    
-                    # Update feature with vectorized stats
-                    feature["vectorized_statistics"] = {
-                        "vectorized": encoder_obj["data"],
-                        "encoder": encoder_obj,
-                        "dataType": data_type
-                    }
-                    
-                    # Add schema info
-                    vectorizer = self._encoder.get_vectorizer(data_type)
-                    schema_list.append({
-                        "featureName": feature.get("name"),
-                        "dataType": data_type,
-                        "offset": current_offset,
-                        "length": vectorizer.get_vector_length(),
-                        "fields": vectorizer.get_vector_description()
-                    })
-                    current_offset += vectorizer.get_vector_length()
-
-        return data, feature_encoders, schema_list
 
     def enhance_dataset(
         self,
@@ -255,11 +180,11 @@ class VectorizationService:
         query: Optional[str] = None
     ) -> Tuple[Dict[str, Any], List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
-        Enhanced method that handles both legacy and direct data formats.
+        Process dataset in direct format (entries as dictionary).
         Supports BOOLEAN, NUMERIC, and CATEGORICAL features.
         
         Args:
-            data: The input dataset
+            data: The input dataset with "entries" as dictionary
             query: Optional feature name filter
             
         Returns:
@@ -268,18 +193,13 @@ class VectorizationService:
                 - encoders_list: either multiple encoders (if query) OR one flattened encoder
                 - schema_list: describes the offset/length for each feature in the flattened array
         """
-        # Detect data format
-        data_format = self._detect_data_format(data)
-        
-        if data_format == "direct":
-            self._logger.info("Processing direct format data")
-            enhanced_data, feature_encoders, schema_list = self._process_direct_format(data, query)
-        elif data_format == "legacy":
-            self._logger.info("Processing legacy format data")
-            enhanced_data, feature_encoders, schema_list = self._process_legacy_format(data, query)
-        else:
-            self._logger.error(f"Unknown data format: {data_format}")
+        # Validate data format
+        if not ("entries" in data and isinstance(data["entries"], dict)):
+            self._logger.error("Invalid data format. Expected 'entries' as dictionary.")
             return data, [], []
+        
+        self._logger.info("Processing direct format data")
+        enhanced_data, feature_encoders, schema_list = self._process_direct_format(data, query)
 
         # If user gave a query or no features found, return them as-is
         if query or not feature_encoders:

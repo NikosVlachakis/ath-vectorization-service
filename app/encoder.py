@@ -65,36 +65,21 @@ class CategoricalVectorizer(BaseVectorizer):
     """Vectorizer for categorical features"""
     
     def vectorize(self, statistics: Dict[str, Any]) -> List[int]:
-        """Convert categorical statistics to [numOfNotNull, numUniqueValues, topValueCount] format"""
+        """Convert categorical statistics to [numOfNotNull] format"""
         num_not_null = statistics.get("numOfNotNull", 0)
         
-        # If no data, return zeros
+        # If no data, return zero
         if num_not_null == 0:
-            return [0, 0, 0]
+            return [0]
         
-        value_set = statistics.get("valueSet", [])
-        cardinality_per_item = statistics.get("cardinalityPerItem", [])
-        
-        num_unique_values = len(value_set)
-        
-        # Handle both list and dictionary formats for cardinalityPerItem
-        if isinstance(cardinality_per_item, list):
-            # cardinalityPerItem is a list: [400, 200, 200, 100, 100]
-            top_value_count = max(cardinality_per_item) if cardinality_per_item else 0
-        elif isinstance(cardinality_per_item, dict):
-            # cardinalityPerItem is a dict: {"Engineering": 400, "Marketing": 200, ...}
-            top_value_count = max(cardinality_per_item.values()) if cardinality_per_item else 0
-        else:
-            # Fallback for unknown format
-            top_value_count = 0
-        
-        return [num_not_null, num_unique_values, top_value_count]
+        # Only return numOfNotNull - the only meaningful stat for multi-site aggregation
+        return [num_not_null]
     
     def get_vector_length(self) -> int:
-        return 3
+        return 1
     
     def get_vector_description(self) -> List[str]:
-        return ["numOfNotNull", "numUniqueValues", "topValueCount"]
+        return ["numOfNotNull"]
 
 class Encoder:
     """
